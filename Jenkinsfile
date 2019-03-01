@@ -15,7 +15,8 @@ pipeline {
       environment {
         PREVIEW_VERSION = "0.0.0-SNAPSHOT-$BRANCH_NAME-$BUILD_NUMBER"
         PREVIEW_NAMESPACE = "$APP_NAME-$BRANCH_NAME".toLowerCase()
-        HELM_RELEASE = "$PREVIEW_NAMESPACE".toLowerCase()        
+        HELM_RELEASE = "$PREVIEW_NAMESPACE".toLowerCase()
+        FRONTEND_VERSION = "0.0.4"
       }
       steps {
         container('nodejs') {
@@ -25,10 +26,12 @@ pipeline {
           sh "jx step post build --image $DOCKER_REGISTRY/$ORG/$APP_NAME:$PREVIEW_VERSION"
           
           dir('./charts/preview') {
-            sh """
-               export FRONTEND_VERSION=\$("jx get applications -u -p --env=staging | grep frontend | awk '{print \\\$2}'")
-               make preview
-               """
+            // jx get applications command fails :(
+            // sh """
+            //    export FRONTEND_VERSION=\$("jx get applications -u -p --env=staging | grep frontend | awk '{print \\\$2}'")
+            //    make preview
+            //    """
+            sh "make preview"
             sh "jx preview --app $APP_NAME --dir ../.."
           }
         }
