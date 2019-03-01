@@ -10,7 +10,7 @@ dependencies:
   version: 2.3.92
 
 - name: frontend
-  repository: http://chartmuseum
+  repository: http://jenkins-x-chartmuseum:8080
   version: ~0.0.4
 
   # !! "alias: preview" must be last entry in dependencies array !!
