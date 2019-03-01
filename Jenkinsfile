@@ -23,7 +23,7 @@ pipeline {
           sh "CI=true DISPLAY=:99 npm test"
           sh "export VERSION=$PREVIEW_VERSION && skaffold build -f skaffold.yaml"
           sh "jx step post build --image $DOCKER_REGISTRY/$ORG/$APP_NAME:$PREVIEW_VERSION"
-          sh "export FRONTEND_VERSION=$(jx get applications -u -p --env=staging | grep frontend | awk '{print \$2}')"
+          sh "export FRONTEND_VERSION=\$(jx get applications -u -p --env=staging | grep frontend | awk '{print \$2}')"
           dir('./charts/preview') {
             sh "make preview"
             sh "jx preview --app $APP_NAME --dir ../.."
