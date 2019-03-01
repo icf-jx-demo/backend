@@ -19,9 +19,8 @@ pipeline {
       }
       steps {
         container('nodejs') {
-          environment {
-            FRONTEND_VERSION = sh("jx get applications -u -p --env=staging | grep frontend | awk '{print \$2}'").trim()
-          }
+          env.FRONTEND_VERSION = sh("jx get applications -u -p --env=staging | grep frontend | awk '{print \$2}'").trim()
+          
           sh "npm install"
           sh "CI=true DISPLAY=:99 npm test"
           sh "export VERSION=$PREVIEW_VERSION && skaffold build -f skaffold.yaml"
