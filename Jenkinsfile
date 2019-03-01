@@ -16,7 +16,7 @@ pipeline {
         PREVIEW_VERSION = "0.0.0-SNAPSHOT-$BRANCH_NAME-$BUILD_NUMBER"
         PREVIEW_NAMESPACE = "$APP_NAME-$BRANCH_NAME".toLowerCase()
         HELM_RELEASE = "$PREVIEW_NAMESPACE".toLowerCase()
-        FRONTEND_VERSION = "0.0.4"
+        FRONTEND_VERSION = "0.0.5"
       }
       steps {
         container('nodejs') {
