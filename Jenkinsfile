@@ -27,6 +27,8 @@ pipeline {
           
           dir('./charts/preview') {
             // jx get applications command fails :(
+            // error: getting current user: user: Current not implemented on linux/amd64
+            // seems that jx binary isn't correctly compiled for linux
             // sh """
             //    export FRONTEND_VERSION=\$("jx get applications -u -p --env=staging | grep frontend | awk '{print \\\$2}'")
             //    make preview
