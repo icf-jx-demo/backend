@@ -19,7 +19,7 @@ async function all(ctx) {
 
   let message = env.message || 'hello'
 
-  ctx.body = { headers, query, env, message }
+  ctx.body = { headers, query, message }
 }
 
 module.exports = app
