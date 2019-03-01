@@ -34,9 +34,10 @@ pipeline {
             sh "make preview"
             sh "jx preview --app $APP_NAME --dir ../.."
           }
-        }
-        // jx-icf-jx-demo-backend-pr-1.35.192.173.239.nip.io
+
+          // jx-icf-jx-demo-backend-pr-1.35.192.173.239.nip.io
         pullRequest.comment("Frontend application available at: frontend.jx-icf-jx-demo-backend-${BRANCH_NAME}.35.192.173.239.nip.io")
+        }
       }
     }
     stage('Build Release') {
