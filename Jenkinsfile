@@ -16,6 +16,7 @@ pipeline {
         PREVIEW_VERSION = "0.0.0-SNAPSHOT-$BRANCH_NAME-$BUILD_NUMBER"
         PREVIEW_NAMESPACE = "$APP_NAME-$BRANCH_NAME".toLowerCase()
         HELM_RELEASE = "$PREVIEW_NAMESPACE".toLowerCase()
+        FRONTEND_VERSION = "0.0.4"
       }
       steps {
         container('nodejs') {
@@ -23,11 +24,22 @@ pipeline {
           sh "CI=true DISPLAY=:99 npm test"
           sh "export VERSION=$PREVIEW_VERSION && skaffold build -f skaffold.yaml"
           sh "jx step post build --image $DOCKER_REGISTRY/$ORG/$APP_NAME:$PREVIEW_VERSION"
+          
           dir('./charts/preview') {
+            // jx get applications command fails :(
+            // error: getting current user: user: Current not implemented on linux/amd64
+            // seems that jx binary isn't correctly compiled for linux
+            // sh """
+            //    export FRONTEND_VERSION=\$("jx get applications -u -p --env=staging | grep frontend | awk '{print \\\$2}'")
+            //    make preview
+            //    """
             sh "make preview"
             sh "jx preview --app $APP_NAME --dir ../.."
           }
         }
+        // this doesn't work :( error: Method calls on objects not allowed outside "script" blocks. @ line 39, column 9.
+        // jx-icf-jx-demo-backend-pr-1.35.192.173.239.nip.io
+        // pullRequest.comment("Frontend application available at: frontend.jx-icf-jx-demo-backend-${BRANCH_NAME}.35.192.173.239.nip.io")
       }
     }
     stage('Build Release') {
