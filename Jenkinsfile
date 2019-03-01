@@ -16,6 +16,7 @@ pipeline {
         PREVIEW_VERSION = "0.0.0-SNAPSHOT-$BRANCH_NAME-$BUILD_NUMBER"
         PREVIEW_NAMESPACE = "$APP_NAME-$BRANCH_NAME".toLowerCase()
         HELM_RELEASE = "$PREVIEW_NAMESPACE".toLowerCase()
+        FRONTEND_VERSION = sh("jx get applications -u -p --env=staging | grep frontend | awk '{print \$2}'").trim()
       }
       steps {
         container('nodejs') {
@@ -23,7 +24,7 @@ pipeline {
           sh "CI=true DISPLAY=:99 npm test"
           sh "export VERSION=$PREVIEW_VERSION && skaffold build -f skaffold.yaml"
           sh "jx step post build --image $DOCKER_REGISTRY/$ORG/$APP_NAME:$PREVIEW_VERSION"
-          sh "export FRONTEND_VERSION=\$(jx get applications -u -p --env=staging | grep frontend | awk '{print \$2}')"
+          
           dir('./charts/preview') {
             sh "make preview"
             sh "jx preview --app $APP_NAME --dir ../.."
