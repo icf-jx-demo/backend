@@ -26,7 +26,7 @@ pipeline {
           
           dir('./charts/preview') {
             sh """
-               export FRONTEND_VERSION = \$("jx get applications -u -p --env=staging | grep frontend | awk '{print \$2}'")
+               export FRONTEND_VERSION=\$("jx get applications -u -p --env=staging | grep frontend | awk '{print \$2}'")
                make preview
                """
             sh "jx preview --app $APP_NAME --dir ../.."
